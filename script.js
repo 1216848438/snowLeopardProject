@@ -66,3 +66,14 @@ async function updatePoints(pointsToAdd) {
 }
 
 window.onload = loadRandomQuestion;
+
+async function updatePoints(pointsToAdd) {
+  const user = auth.currentUser;
+  if(user) {
+    const userRef = db.collection('users').doc(user.uid);
+    const increment = firebase.firestore.FieldValue.increment(pointsToAdd);
+    await userRef.update({points: increment});
+    const userDoc = await userRef.get();
+    document.getElementById('user-points').textContent = userDoc.data().points;
+  }
+}
